@@ -20,7 +20,7 @@ export class MatPasswordStrengthComponent implements OnInit, OnChanges {
   @Input() externalError: boolean;
 
   @Input() enableLengthRule = true;
-  
+
   // Enable rules for specific type checking.
   @Input() enableLowerCaseLetterRule = true;
   @Input() enableUpperCaseLetterRule = true;
@@ -31,7 +31,7 @@ export class MatPasswordStrengthComponent implements OnInit, OnChanges {
   @Input() minLowerCase: number = null;
   @Input() minUpperCase: number = null;
   @Input() minDigits: number = null;
-  @Input() minSpecial: number = null;  
+  @Input() minSpecial: number = null;
 
   @Input() min = 8;
   @Input() max = 30;
@@ -155,22 +155,22 @@ export class MatPasswordStrengthComponent implements OnInit, OnChanges {
 
   // Special handlers for specific min handlers.
   private _containsAtLeastMinUpperCase (): boolean {
-    this.containsMinUpperCase = this.password.match (Criteria.min_upper_case_char).length >= this.minUpperCase
+    this.containsMinUpperCase = this.password.replace (this.criteriaMap.get(Criteria.min_upper_case_char), '').length >= this.minUpperCase;
     return this.containsMinUpperCase;
   }
 
   private _containsAtLeastMinLowerCase (): boolean {
-    this.containsMinLowerCase = this.password.match (Criteria.min_lower_case_char).length >= this.minLowerCase
+    this.containsMinLowerCase = this.password.replace (this.criteriaMap.get(Criteria.min_lower_case_char), '').length >= this.minLowerCase;
     return this.containsMinLowerCase;
   }
 
   private _containsAtLeastMinDigits (): boolean {
-    this.containsMinDigits = this.password.match (Criteria.min_digits_char).length >= this.minDigits
+    this.containsMinDigits = this.password.replace (this.criteriaMap.get(Criteria.min_digits_char), '').length >= this.minDigits;
     return this.containsMinDigits;
   }
 
   private _containsAtLeastMinSpecial (): boolean {
-    this.containsMinSpecial = this.password.match (Criteria.min_special_char).length >= this.minSpecial
+    this.containsMinSpecial = this.password.replace (this.criteriaMap.get(Criteria.min_special_char), '').length >= this.minSpecial;
     return this.containsMinSpecial;
   }
 
@@ -195,45 +195,41 @@ export class MatPasswordStrengthComponent implements OnInit, OnChanges {
       this.validatorsArray.push(Validators.minLength(this.min));
       this.validatorsArray.push(Validators.maxLength(this.max));
     }
-    if (this.enableLowerCaseLetterRule) {
+    if (this.enableLowerCaseLetterRule && !this.minLowerCase) {
       this.criteriaMap.set(Criteria.at_least_one_lower_case_char, RegExpValidator.lowerCase);
       this.validatorsArray.push(Validators.pattern(RegExpValidator.lowerCase))
-
-      // If there is a minimum amount required add that pattern.
-      if (this.minLowerCase) {
-        this.criteriaMap.set(Criteria.min_lower_case_char, RegExpValidator.lowerCase);
-        this.validatorsArray.push(Validators.pattern(RegExpValidator.lowerCase))
-      }
     }
-    if (this.enableUpperCaseLetterRule) {
+    // If there is a minimum amount required add that pattern.
+    if (this.minLowerCase) {
+      this.criteriaMap.set(Criteria.min_lower_case_char, RegExpValidator.lowerCaseOnly);
+      this.validatorsArray.push(Validators.pattern(RegExpValidator.lowerCaseOnly))
+    }
+    if (this.enableUpperCaseLetterRule && !this.minUpperCase) {
       this.criteriaMap.set(Criteria.at_least_one_upper_case_char, RegExpValidator.upperCase);
       this.validatorsArray.push(Validators.pattern(RegExpValidator.upperCase))
-
-      // If there is a minimum amount required add that pattern.
-      if (this.minUpperCase) {
-        this.criteriaMap.set(Criteria.min_upper_case_char, RegExpValidator.upperCase);
-        this.validatorsArray.push(Validators.pattern(RegExpValidator.upperCase))
-      }
     }
-    if (this.enableDigitRule) {
+    // If there is a minimum amount required add that pattern.
+    if (this.minUpperCase) {
+      this.criteriaMap.set(Criteria.min_upper_case_char, RegExpValidator.upperCaseOnly);
+      this.validatorsArray.push(Validators.pattern(RegExpValidator.upperCaseOnly))
+    }
+    if (this.enableDigitRule && !this.minDigits) {
       this.criteriaMap.set(Criteria.at_least_one_digit_char, RegExpValidator.digit);
       this.validatorsArray.push(Validators.pattern(RegExpValidator.digit))
-
-      // If there is a minimum amount required add that pattern.
-      if (this.minDigits) {
-        this.criteriaMap.set(Criteria.min_digits_char, RegExpValidator.digit);
-        this.validatorsArray.push(Validators.pattern(RegExpValidator.digit))
-      }
     }
-    if (this.enableSpecialCharRule) {
+    // If there is a minimum amount required add that pattern.
+    if (this.minDigits) {
+      this.criteriaMap.set(Criteria.min_digits_char, RegExpValidator.digitOnly);
+      this.validatorsArray.push(Validators.pattern(RegExpValidator.digitOnly))
+    }
+    if (this.enableSpecialCharRule && !this.minSpecial) {
       this.criteriaMap.set(Criteria.at_least_one_special_char, RegExpValidator.specialChar);
       this.validatorsArray.push(Validators.pattern(RegExpValidator.specialChar))
-
-      // If there is a minimum amount required add that pattern.
-      if (this.minSpecial) {
-        this.criteriaMap.set(Criteria.min_special_char, RegExpValidator.specialChar);
-        this.validatorsArray.push(Validators.pattern(RegExpValidator.specialChar))
-      }
+    }
+    // If there is a minimum amount required add that pattern.
+    if (this.minSpecial) {
+      this.criteriaMap.set(Criteria.min_special_char, RegExpValidator.specialCharOnly);
+      this.validatorsArray.push(Validators.pattern(RegExpValidator.specialCharOnly))
     }
     if (this.customValidator) {
       this.criteriaMap.set(Criteria.at_custom_chars, this.parseCustomValidatorsRegex());
@@ -255,10 +251,10 @@ export class MatPasswordStrengthComponent implements OnInit, OnChanges {
 
     requirements.push(
       this.enableLengthRule ? this._containAtLeastMinChars() : false,
-      this.enableLowerCaseLetterRule ? this._containAtLeastOneLowerCaseLetter() : false,
-      this.enableUpperCaseLetterRule ? this._containAtLeastOneUpperCaseLetter() : false,
-      this.enableDigitRule ? this._containAtLeastOneDigit() : false,
-      this.enableSpecialCharRule ? this._containAtLeastOneSpecialChar() : false,
+      this.enableLowerCaseLetterRule && !this.minLowerCase ? this._containAtLeastOneLowerCaseLetter() : false,
+      this.enableUpperCaseLetterRule && !this.minUpperCase ? this._containAtLeastOneUpperCaseLetter() : false,
+      this.enableDigitRule && !this.minDigits ? this._containAtLeastOneDigit() : false,
+      this.enableSpecialCharRule && !this.minSpecial ? this._containAtLeastOneSpecialChar() : false,
       this.customValidator ? this._containCustomChars() : false,
       this.minLowerCase ? this._containsAtLeastMinLowerCase () : false,
       this.minUpperCase ? this._containsAtLeastMinUpperCase () : false,
@@ -279,10 +275,10 @@ export class MatPasswordStrengthComponent implements OnInit, OnChanges {
         this.containAtLeastOneUpperCaseLetter =
           this.containAtLeastOneDigit =
             this.containAtCustomChars =
-              this.containAtLeastOneSpecialChar = 
+              this.containAtLeastOneSpecialChar =
                 this.containsMinLowerCase =
                   this.containsMinUpperCase =
-                    this.containsMinDigit =
+                    this.containsMinDigits =
                       this.containsMinSpecial = false;
   }
 }

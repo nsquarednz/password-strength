@@ -99,20 +99,32 @@ export class MatPasswordStrengthInfoComponent implements OnInit {
   minCharsCriteriaMsg: string;
 
   @Input()
-  minLowerCaseCriteriaMsg = `contains at least ${this.passwordComponent.minLowerCase} lower characters`;
-  
+  minLowerCaseCriteriaMsg: string;
+
   @Input()
-  minUpperCaseCriteriaMsg = `contains at least ${this.passwordComponent.minUpperCase} upper characters`;
-  
+  minUpperCaseCriteriaMsg: string;
+
   @Input()
-  minDigitsCriteriaMsg = `contains at least ${this.passwordComponent.minDigits} digit characters`;
-  
+  minDigitsCriteriaMsg: string;
+
   @Input()
-  minSpecialCharsCriteriaMsg = `contains at least ${this.passwordComponent.minSpecial} special characters`;
+  minSpecialCharsCriteriaMsg: string;
 
   ngOnInit(): void {
     if (!this.minCharsCriteriaMsg) {
-      this.minCharsCriteriaMsg = `contains at least ${this.passwordComponent.min} characters`
+      this.minCharsCriteriaMsg = `contains at least ${this.passwordComponent.min} characters`;
+    }
+    if (!this.minLowerCaseCriteriaMsg) {
+      this.minLowerCaseCriteriaMsg = `contains at least ${this.passwordComponent.minLowerCase} lower characters`;
+    }
+    if (!this.minUpperCaseCriteriaMsg) {
+      this.minUpperCaseCriteriaMsg = `contains at least ${this.passwordComponent.minUpperCase} upper characters`;
+    }
+    if (!this.minDigitsCriteriaMsg) {
+      this.minDigitsCriteriaMsg = `contains at least ${this.passwordComponent.minDigits} digit characters`;
+    }
+    if (!this.minSpecialCharsCriteriaMsg) {
+      this.minSpecialCharsCriteriaMsg = `contains at least ${this.passwordComponent.minSpecial} special characters`;
     }
   }
 
