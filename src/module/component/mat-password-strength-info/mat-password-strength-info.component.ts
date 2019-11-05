@@ -81,19 +81,19 @@ export class MatPasswordStrengthInfoComponent implements OnInit {
   enableScoreInfo = false;
 
   @Input()
-  lowerCaseCriteriaMsg = 'contains at least one lower character';
+  lowerCaseCriteriaMsg = 'Contains at least one lower case character';
 
   @Input()
-  upperCaseCriteriaMsg = 'contains at least one upper character';
+  upperCaseCriteriaMsg = 'Contains at least one upper case character';
 
   @Input()
-  digitsCriteriaMsg = 'contains at least one digit character';
+  digitsCriteriaMsg = 'Contains at least one numeric character';
 
   @Input()
-  specialCharsCriteriaMsg = 'contains at least one special character';
+  specialCharsCriteriaMsg = 'Contains at least one special character';
 
   @Input()
-  customCharsCriteriaMsg = 'contains at least one custom character';
+  customCharsCriteriaMsg = 'Contains at least one custom character';
 
   @Input()
   minCharsCriteriaMsg: string;
@@ -112,19 +112,19 @@ export class MatPasswordStrengthInfoComponent implements OnInit {
 
   ngOnInit(): void {
     if (!this.minCharsCriteriaMsg) {
-      this.minCharsCriteriaMsg = `contains at least ${this.passwordComponent.min} characters`;
+      this.minCharsCriteriaMsg = `Contains at least ${this.passwordComponent.min} characters`;
     }
     if (!this.minLowerCaseCriteriaMsg) {
-      this.minLowerCaseCriteriaMsg = `contains at least ${this.passwordComponent.minLowerCase} lower characters`;
+      this.minLowerCaseCriteriaMsg = `Contains at least ${this.passwordComponent.minLowerCase} lower case characters`;
     }
     if (!this.minUpperCaseCriteriaMsg) {
-      this.minUpperCaseCriteriaMsg = `contains at least ${this.passwordComponent.minUpperCase} upper characters`;
+      this.minUpperCaseCriteriaMsg = `Contains at least ${this.passwordComponent.minUpperCase} upper case characters`;
     }
     if (!this.minDigitsCriteriaMsg) {
-      this.minDigitsCriteriaMsg = `contains at least ${this.passwordComponent.minDigits} digit characters`;
+      this.minDigitsCriteriaMsg = `Contains at least ${this.passwordComponent.minDigits} numeric characters`;
     }
     if (!this.minSpecialCharsCriteriaMsg) {
-      this.minSpecialCharsCriteriaMsg = `contains at least ${this.passwordComponent.minSpecial} special characters`;
+      this.minSpecialCharsCriteriaMsg = `Contains at least ${this.passwordComponent.minSpecial} special characters`;
     }
   }
 
